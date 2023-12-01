@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState, useEffect } from "react";
+import FileUpload from "./FileUpload";
 
 function App() {
+  const [audio, setAudio] = useState(null);
+
+  const handleUpload = (audioBuffer) => {
+    setAudio(audioBuffer);
+  };
+
+  useEffect(() => {
+    if (audio) {
+      const audioBlob = new Blob([Buffer.from(audio, "base64")], {
+        type: "audio/wav",
+      });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audioElement = new Audio(audioUrl);
+      audioElement.play();
+    }
+  }, [audio]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Azure PDF Reader</h1>
+      <FileUpload onUpload={handleUpload} />
     </div>
   );
 }
